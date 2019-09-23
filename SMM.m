@@ -703,46 +703,6 @@ classdef SMM < handle
         end
     end
     
-    % Decoding
-    methods
-        function s = decode(this, r, t, d)
-            % Decoding
-            %
-            % Parameters
-            % - r: double
-            %   Probability of spike (response)
-            % - t: double
-            %   Begin time of response from saccade onset
-            % - d: double
-            %   Delay from time of response
-            %
-            % Returns
-            % -------
-            % - s: double[width, height]
-            %   Reconstructed stimulus
-            
-            t = t - this.tmin + 1;
-            
-            % initiate reconstruced stimulus
-            s = zeros(this.width, this.height);
-            
-            % load models
-            this.loadModels();
-            model = this.models{t};
-            
-            % load linear kernels
-            W = this.getKernels();
-            W(isnan(W)) = 0;
-            
-            for x = 1:this.width
-                for y = 1:this.height
-                    p = model.predict(W(x, y, t, d));
-                    s(x, y) = 1 - (abs(r - p)); % todo: use soft max
-                end
-            end
-        end
-    end
-    
     % Performance
     methods
         function perfs = getPerfs(this, probe)

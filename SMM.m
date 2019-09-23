@@ -535,36 +535,6 @@ classdef SMM < handle
             toc();
         end
     
-        function makeDBounds(app)
-            % Make masked map
-            
-            app.dbounds = zeros(app.width, app.height, size(app.bmap, 3), 3);
-            for x = 1:app.width
-                for y = 1:app.height
-                    map = squeeze(app.bmap(x, y, :, :));
-                    
-                    T = size(map, 1); % number of times
-                    bounds = nan(T, 3); % [Time, Min, Max, Duration]
-                    
-                    for t = 1:T
-                        dfirst = find(map(t, :), 1, 'first');
-                        if isempty(dfirst)
-                            continue;
-                        end
-
-                        dlast = find(map(t, :), 1, 'last');
-                        if isempty(dlast)
-                            continue;
-                        end
-
-                        bounds(t, :) = [dfirst, dlast, dlast - dfirst];
-                    end
-                    
-                    app.dbounds(x, y, :, :) = bounds;
-                end
-            end
-        end
-        
         function times = getTimes(this)
             times = this.tmin:this.tmax;
         end
